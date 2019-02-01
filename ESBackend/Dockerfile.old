@@ -1,0 +1,16 @@
+FROM fedora:29
+
+MAINTAINER Giorgos Gavriil version: 0.1
+
+
+EXPOSE 8080
+
+ADD install-dotnetcore.sh /tmp
+RUN bash /tmp/install-dotnetcore.sh
+
+RUN dotnet build --output out
+ADD out /usr/local/ESBackend
+#RUN dnf install wget
+
+CMD ["dotnet", "/usr/local/ESBackend/ESBackend.dll"]
+

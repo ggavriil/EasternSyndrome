@@ -1,15 +1,17 @@
-FROM fedora:29
+FROM microsoft/dotnet:sdk AS build-env
+WORKDIR /app
 
-MAINTAINER Giorgos Gavriil version: 0.1
+# Copy csproj and restore as distinct layers
+COPY *.csproj ./
+RUN dotnet restore
 
+# Copy everything else and build
+COPY . ./
+RUN dotnet publish -c Release -o out
 
-EXPOSE 8080
-
-ADD out /usr/local/ESBackend
-ADD install-dotnetcore.sh /tmp
-
-#RUN dnf install wget
-RUN bash /tmp/install-dotnetcore.sh
-
-CMD ["dotnet", "/usr/local/ESBackend/ESBackend.dll"]
+# Build runtime image
+FROM microsoft/dotnet:aspnetcore-runtime
+WORKDIR /app
+COPY --from=build-env /app/out .
+ENTRYPOINT ["dotnet", "ESBackend.dll"]
 
