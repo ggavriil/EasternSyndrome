@@ -21,8 +21,9 @@ namespace ESBackend.Controllers
         }
 
         [HttpPost]
-        public void Post([FromQuery] string ip)
+        public void Post([FromQuery(Name="dt")] string ip)
         {
+            Console.WriteLine(ip);
             Ip = ip;
             LastUpdate = DateTime.UtcNow;
         }

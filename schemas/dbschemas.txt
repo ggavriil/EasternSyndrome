@@ -1,0 +1,18 @@
+Users:
+  - userId
+  - username
+  - password
+  - dateOfBirth
+  - email
+  - registeredSince
+
+UserData:
+  - userId
+  - timestamp
+  - angle
+
+DeviceStatus:
+  - deviceId
+  - userId
+  - batteryLevel
+
