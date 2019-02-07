@@ -10,21 +10,20 @@ namespace ESBackend.Controllers
     [ApiController]
     public class PinfoController : ControllerBase
     {
-        private static string Ip {get; set;}
+        private static string IpData {get; set;}
         private static DateTime LastUpdate {get; set;}
 
         // GET api/values
         [HttpGet]
         public ActionResult<string> Get()
         {
-            return $"{Ip}\nLast update: {LastUpdate}Z" ?? "No IP has been provided.";
+            return $"{IpData}\nLast update: {LastUpdate}Z" ?? "No IP has been provided.";
         }
 
         [HttpPost]
-        public void Post([FromQuery(Name="dt")] string ip)
+        public void Post([FromBody] string ipData)
         {
-            Console.WriteLine(ip);
-            Ip = ip;
+            IpData = ipData;
             LastUpdate = DateTime.UtcNow;
         }
     }

@@ -41,7 +41,7 @@ namespace ESBackend
                 app.UseHsts();
             }
             //app.UseMiddleware<RequestResponseLoggingMiddleware>();
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseMvc();
         }
     }
