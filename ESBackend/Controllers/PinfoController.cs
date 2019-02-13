@@ -24,7 +24,7 @@ namespace ESBackend.Controllers
         public void Post([FromBody] string ipData)
         {
             IpData = ipData;
-            LastUpdate = DateTime.UtcNow;
+            LastUpdate = DateTime.UtcNow.ToUniversalTime();
         }
     }
 }
