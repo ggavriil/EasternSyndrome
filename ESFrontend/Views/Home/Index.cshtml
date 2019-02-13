@@ -1,8 +1,63 @@
-﻿@{
+﻿@model List<Tuple<int, int>>
+@{
     ViewData["Title"] = "Home Page";
+    //Console.WriteLine("HELLO" + Model);
+    //var xvals = new List<int>();
+    //var yvals = new List<int>();
+    var xvals = Newtonsoft.Json.JsonConvert.SerializeObject(Model.Select(t => t.Item1).ToList());
+    var yvals = Newtonsoft.Json.JsonConvert.SerializeObject(Model.Select(t => t.Item2).ToList());
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+
+ <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Dashboard</h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+          <div class="btn-group mr-2">
+            <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
+          </div>
+          <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
+            <span data-feather="calendar"></span>
+            This week
+          </button>
+        </div>
+      </div>
+
+      <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
+<script type="text/javascript">
+(function () {
+    'use strict'
+  
+    feather.replace()
+  
+    // Graphs
+    var ctx = document.getElementById('myChart')
+    // eslint-disable-next-line no-unused-vars
+    var myChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: @Html.Raw(xvals),
+        datasets: [{
+          data: @Html.Raw(yvals),
+          lineTension: 0,
+          backgroundColor: 'transparent',
+          borderColor: '#007bff',
+          borderWidth: 4,
+          pointBackgroundColor: '#007bff'
+        }]
+      },
+      options: {
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: false
+            }
+          }]
+        },
+        legend: {
+          display: false
+        }
+      }
+    })
+  }())
+</script>

@@ -12,12 +12,12 @@ namespace ESFrontend.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            return View(new SlouchGraphModel(12).Points);
         }
 
         public IActionResult Privacy()
         {
-            return View();
+            return View(new List<Tuple<int,int>>());
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
