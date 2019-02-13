@@ -19,7 +19,7 @@ public class RequestResponseLoggingMiddleware
         //First, get the incoming request
         var request = await FormatRequest(context.Request);
 
-        Console.WriteLine(request);
+        Console.WriteLine(request); 
 
         //Copy a pointer to the original response body stream
         var originalBodyStream = context.Response.Body;
