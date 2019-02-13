@@ -4,28 +4,20 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using ESFrontend.Models;
+using test.Models;
 
-namespace ESFrontend.Controllers
+namespace test.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index(int id)
+        public IActionResult Index()
         {
-            if(id == 0) {
-                id = 7;
-            }
-            return View(new SlouchGraphModel(id).Points);
-        }
-
-        public IActionResult Notifications() 
-        {
-            return View(new SlouchGraphModel(2).Points);
+            return View();
         }
 
         public IActionResult Privacy()
         {
-            return View(new List<Tuple<int,int>>());
+            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
