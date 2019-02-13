@@ -187,7 +187,7 @@ while True:
     else:
         last_slouch_time = curr_time
 
-   # samplingAggregator.register(sd.samplingData(current_angle_z, myfeatures.std.resultant, batt_v, curr_time))
+    samplingAggregator.register(sd.samplingData(current_angle_z, myfeatures.std.resultant, batt_v, curr_time))
 
 
 
