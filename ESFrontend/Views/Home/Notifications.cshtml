@@ -1,15 +1,4 @@
-﻿@model List<Tuple<int, int>>
-@{
-    ViewData["Title"] = "Home Page";
-    //Console.WriteLine("HELLO" + Model);
-    //var xvals = new List<int>();
-    //var yvals = new List<int>();
-    var xvals = Newtonsoft.Json.JsonConvert.SerializeObject(Model.Select(t => t.Item1).ToList());
-    var yvals = Newtonsoft.Json.JsonConvert.SerializeObject(Model.Select(t => t.Item2).ToList());
-}
-
-
- 
+﻿
         <h1 class="h2">Notification Rules</h1>
       <div class="table-responsive">
         <table class="table table-striped table-sm">

@@ -20,12 +20,17 @@ namespace ESFrontend.Controllers
 
         public IActionResult Notifications() 
         {
-            return View(new SlouchGraphModel(2).Points);
+            return View();
         }
 
         public IActionResult Privacy()
         {
-            return View(new List<Tuple<int,int>>());
+            return View();
+        }
+
+        public IActionResult Reports() 
+        {
+            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
