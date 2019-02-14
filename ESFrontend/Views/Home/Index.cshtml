@@ -1,11 +1,13 @@
-﻿@model List<Tuple<int, int>>
+﻿@model List<Tuple<DateTime, double>>
 @{
     ViewData["Title"] = "Home Page";
     //Console.WriteLine("HELLO" + Model);
     //var xvals = new List<int>();
     //var yvals = new List<int>();
-    var xvals = Newtonsoft.Json.JsonConvert.SerializeObject(Model.Select(t => t.Item1).ToList());
-    var yvals = Newtonsoft.Json.JsonConvert.SerializeObject(Model.Select(t => t.Item2).ToList());
+    var xvalsTicks = Model.Select(t => t.Item1.Ticks);
+    var dataWithTicks = Model.Select(t => Tuple.Create(t.Item1.Ticks, t.Item2)).Select(t => new {x = t.Item1, y = t.Item2});
+    var xvals = Newtonsoft.Json.JsonConvert.SerializeObject(xvalsTicks.ToList());
+    var yvals = Newtonsoft.Json.JsonConvert.SerializeObject(dataWithTicks.ToList());
 }
 
 
@@ -55,6 +57,9 @@
       },
       options: {
         scales: {
+          xAxes: [{
+            type: 'time'
+          }],
           yAxes: [{
             ticks: {
               beginAtZero: false
