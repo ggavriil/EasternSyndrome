@@ -7,6 +7,10 @@ import busio
 import adafruit_lis3dh
 import RPi.GPIO as GPIO
 import samplingdata as sd
+import mqttconnector as mqtt
+
+#mqcl = mqtt.Client()
+#mqcl.connect("es.giorgos.io", port=1833)
 
 i2c = busio.I2C(board.SCL, board.SDA)
 int1 = digitalio.DigitalInOut(board.D6)  # Set this to the correct pin for the interrupt!
@@ -167,6 +171,7 @@ while True:
     curr_time =f.samples[len(f.samples)-1].timestamp
     delta_time = (curr_time - last_slouch_time).seconds
     current_angle_z= myfeatures.mean.angle_z
+    mqtt.publish_angle(current_angle_z)
     print("Std of Z angle ", myfeatures.std.angle_z, "Std of resultant acc ", myfeatures.std.resultant,"Current Z angle", myfeatures.samples[len(myfeatures.samples)-1].getAngle()[2])
     #batt_v = ((470+330)/(330))*(1.8/1024)*((lis3dh.read_adc_raw(2) & 0xffc0)>>6) - 0.32
     batt_v = (lis3dh.read_adc_raw(2) & 0xffc0)>>6

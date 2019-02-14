@@ -3,6 +3,7 @@ import json
 import datetime
 import time
 
+
 class samplingData:
     
     def __init__(self, meanAngleZ, stdAcc, adcV, timestamp):
@@ -40,7 +41,7 @@ class samplingAggregator:
             aggregatedData = { "samples": samplesDicts, "size": self.size, "adcV": self.adcV, }
             jsons = json.dumps(aggregatedData)
             print(jsons)
-            #mqtt.publish(jsons)
+            mqtt.publish(jsons)
             self.samples = []    
             self.adcV = 0
         self.samples.append(sampleData(sample.timestamp, sample.meanAngleZ, sample.stdAcc))
