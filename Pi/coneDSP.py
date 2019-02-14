@@ -184,7 +184,7 @@ while True:
         slouching = False
 
     if slouching:
-        if delta_time > 8:
+        if delta_time > 4:
             print("Slouching")
             vib_on()
             time.sleep(0.1)
@@ -194,8 +194,12 @@ while True:
 
     samplingAggregator.register(sd.samplingData(current_angle_z, myfeatures.std.resultant, batt_v, curr_time))
 
-
-
+def cycleMotor():
+    while True:
+        vib_on()
+        time.sleep(0.05)
+        vib_off()
+        time.sleep(0.05)
 
    # adc1_raw = lis3dh.read_adc_raw(2) adc1_raw = (adc1_raw & 0xFFC0) >> 6
    # print(adc1_raw)
