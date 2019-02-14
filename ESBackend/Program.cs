@@ -14,6 +14,7 @@ namespace ESBackend
     {
         public static void Main(string[] args)
         {
+            Task.Run(() => AMQListener.Listen());
             CreateWebHostBuilder(args).Build().Run();
         }
 
