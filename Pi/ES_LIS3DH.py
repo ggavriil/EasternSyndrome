@@ -1,3 +1,4 @@
+import time
 import smbus
 
 BOOT     = 0x80
@@ -20,12 +21,13 @@ OUT_Y_L = 0x2A
 OUT_Y_H = 0x2B
 OUT_Z_L = 0x2C
 OUT_Z_H = 0x2D
+OUT_ADC1_L = 0x08
 
 LIS3DH_ADDR  = 0x18
 
 G_TO_MPSS = 9.80665
 
-SCALE_FACTOR = 2 << 14
+SCALE_FACTOR = 1 << 14
 
 class ES_LIS3DH:
 
@@ -44,25 +46,37 @@ class ES_LIS3DH:
         self.write_byte(TEMP_CFG_REG, ADC_EN)
 
     def read_accel(self):
-        xyz = [self.read_short(OUT_X_L), y = self.read_short(OUT_Y_L),
+        xyz = [self.read_short(OUT_X_L), self.read_short(OUT_Y_L),
                self.read_short(OUT_Z_L)]
-        xyz = (v / SCALE_FACTOR) * G_TO_MPSS for v in xyz
+        xyz = [(v / SCALE_FACTOR) * G_TO_MPSS for v in xyz]
         return (xyz[0], xyz[1], xyz[2])
          
+    def read_adc(self, n):
+        #TODO error handling
+        addr = OUT_ADC1_L + (n - 1) * 2
+        return self.read_short(addr, 6)
+
+    def read_adc_scaled(self, n):
+        val = self.read_adc(n)
+        #return val
+        return 1800+(val+32512)*(-900/65024)
+        return 900 + ((val + (1 << 15))/((1 << 16) - 1)) * 900
+        return 800 + ((val + (1 << 15))/((1 << 16) - 1)) * 800
 
     def write_byte(self, reg, data):
-        bus.write_byte_data(LIS3DH_ADDR, reg, data)
+        self.bus.write_byte_data(LIS3DH_ADDR, reg, data)
 
     def read(self, reg, size):
         arr = []
-        for i in range(len(size)):
+        for i in range(size):
                 arr.append(self.bus.read_byte_data(LIS3DH_ADDR, reg + i))
         return arr
 
-    def read_short(self, reg):
+    def read_short(self, reg, shift_right = 0):
         data = self.read(reg, 2)
-        num = data[0] & (data[1] << 4)
+        num = (data[0] & 0xFF) | ((data[1] & 0xFF) << 8)
         # Convert 2s complement to decimal
-        num = num - (2 << 15) * ((num & 0x8000) >> 15)
+        num = num - (1 << 16) * ((num & 0x8000) >> 15)
+        #num = num / (1 << shift_right)
         return num
 
