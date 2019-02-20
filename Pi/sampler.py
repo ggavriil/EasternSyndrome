@@ -13,6 +13,7 @@ from functools import reduce
 import statistics
 
 lis3dh = ES_LIS3DH.ES_LIS3DH()
+rad_to_deg = 180 / math.pi
 
 #Each sample provides a total of 7 parameters: 6DOF (3 acceleration + 3 rotation) + 1 resultant acceleration. In reality the accelerometer provides only 3 and the additional 4 are calculated
 class SampleCalibrator:
@@ -27,8 +28,10 @@ class SampleCalibrator:
     cal_phi_z=0
     
     def __init__(self, x, y, z):
-        l=math.sqrt(pow(x,2)+pow(y,2)+pow(z,2)) 
-        self.cal_phi_x, self.cal_phi_y, self.cal_phi_z = self.cal_ideal_phi_x-(180/math.pi)*math.acos(x/l), self.cal_ideal_phi_y-(180/math.pi)*math.acos(y/l), self.cal_ideal_phi_z-(180/math.pi)*math.acos(z/l)
+        l = math.sqrt(x ** 2 + y ** 2 + z ** 2) 
+        self.cal_phi_x = self.cal_ideal_phi_x - rad_to_deg * math.acos(x / l)
+        self.cal_phi_y = self.cal_ideal_phi_y - rad_to_deg * math.acos(y / l)
+        self.cal_phi_z = self.cal_ideal_phi_z - rad_to_deg * math.acos(z / l)
 
     def getCalibratedSample(self, x, y, z):
         return SampleCalibrator.Sample(x, y, z, self)
@@ -46,7 +49,9 @@ class SampleCalibrator:
 
         def getAngle(self):
             l = self.resultant()
-            return (180/math.pi)*math.acos(self.acc_x/l)+self.sample_calibrator.cal_phi_x,(180/math.pi)*math.acos(self.acc_y/l)+self.sample_calibrator.cal_phi_y,(180/math.pi)*math.acos(self.acc_z/l)+self.sample_calibrator.cal_phi_z
+            return (rad_to_deg * math.acos(self.acc_x/l) + self.sample_calibrator.cal_phi_x, 
+        rad_to_deg * math.acos(self.acc_y/l) + self.sample_calibrator.cal_phi_y,
+        rad_to_deg * math.acos(self.acc_z/l) + self.sample_calibrator.cal_phi_z)
 
 
 #Each feature( eg mean) can be for one of these parameters
