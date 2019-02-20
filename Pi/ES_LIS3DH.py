@@ -58,10 +58,8 @@ class ES_LIS3DH:
 
     def read_adc_scaled(self, n):
         val = self.read_adc(n)
-        #return val
-        return 1800+(val+32512)*(-900/65024)
-        return 900 + ((val + (1 << 15))/((1 << 16) - 1)) * 900
-        return 800 + ((val + (1 << 15))/((1 << 16) - 1)) * 800
+        # Scaled according to https://goo.gl/ieCMjF
+        return 1800 - ((val + (1 << 15))/((1 << 16) - 1)) * 900
 
     def write_byte(self, reg, data):
         self.bus.write_byte_data(LIS3DH_ADDR, reg, data)

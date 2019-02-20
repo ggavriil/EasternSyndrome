@@ -5,17 +5,20 @@ import board
 import digitalio
 import busio
 import adafruit_lis3dh
+import ES_LIS3DH
 import RPi.GPIO as GPIO
 import samplingdata as sd
 import mqttconnector as mqtt
+import vibrcontrol as vc
 
 #mqcl = mqtt.Client()
 #mqcl.connect("es.giorgos.io", port=1833)
 
-i2c = busio.I2C(board.SCL, board.SDA)
-int1 = digitalio.DigitalInOut(board.D6)  # Set this to the correct pin for the interrupt!
-lis3dh = adafruit_lis3dh.LIS3DH_I2C(i2c, int1=int1)
+#i2c = busio.I2C(board.SCL, board.SDA)
+#int1 = digitalio.DigitalInOut(board.D6)  # Set this to the correct pin for the interrupt!
+#lis3dh = adafruit_lis3dh.LIS3DH_I2C(i2c, int1=int1)
 
+lis3dh = ES_LIS3DH.ES_LIS3DH()
 
 #Each sample provides a total of 7 parameters: 6DOF (3 acceleration + 3 rotation) + 1 resultant acceleration. In reality the accelerometer provides only 3 and the additional 4 are calculated
 class sample:
@@ -98,7 +101,8 @@ class feature:
 #Private method for the actual samples to be taken in the window
         def __sample(self):
             for i in range(feature.window_size):	
-                x,y,z= lis3dh.acceleration
+                #x,y,z= lis3dh.acceleration
+                x,y,z = lis3dh.read_accel()
                 s= sample(x,y,z)
                 self.samples.append(s)
                 time.sleep(feature.sample_period)
@@ -155,7 +159,8 @@ vib_off()
 
 print("Please stand upright and wait for calibration to finish")
 time.sleep(3)
-x,y,z = lis3dh.acceleration
+#x,y,z = lis3dh.acceleration
+x,y,z = lis3dh.read_accel()
 sample.calibrate(x,y,z)
 print("Calibration coefficients: ",sample.cal_phi_x,sample.cal_phi_y,sample.cal_phi_z)
 
@@ -173,8 +178,9 @@ while True:
     current_angle_z= myfeatures.mean.angle_z
     mqtt.publish_angle(current_angle_z)
     print("Std of Z angle ", myfeatures.std.angle_z, "Std of resultant acc ", myfeatures.std.resultant,"Current Z angle", myfeatures.samples[len(myfeatures.samples)-1].getAngle()[2])
-    #batt_v = ((470+330)/(330))*(1.8/1024)*((lis3dh.read_adc_raw(2) & 0xffc0)>>6) - 0.32
-    batt_v = (lis3dh.read_adc_raw(2) & 0xffc0)>>6
+    batt_v = ((470+330)/(330))*lis3dh.read_adc_scaled(2)
+    #batt_v = (lis3dh.read_adc_raw(2) & 0xffc0)>>6
+    #batt_v = lis3dh.read_adc(2)
     print("Battery Level: ", batt_v)
     if (current_angle_z > 40 and current_angle_z  < 80) or (current_angle_z >110):
         if not slouching:
@@ -186,20 +192,13 @@ while True:
     if slouching:
         if delta_time > 4:
             print("Slouching")
-            vib_on()
-            time.sleep(0.1)
-            vib_off() 
+            vc.vibrate(0.1, 4, -1)
+            time.sleep(0.4)
     else:
         last_slouch_time = curr_time
 
     samplingAggregator.register(sd.samplingData(current_angle_z, myfeatures.std.resultant, batt_v, curr_time))
 
-def cycleMotor():
-    while True:
-        vib_on()
-        time.sleep(0.05)
-        vib_off()
-        time.sleep(0.05)
 
    # adc1_raw = lis3dh.read_adc_raw(2) adc1_raw = (adc1_raw & 0xFFC0) >> 6
    # print(adc1_raw)
