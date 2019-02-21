@@ -1,6 +1,9 @@
 import time
 import smbus
 
+# I2C "driver" for the LIS3DH chip. Comments that end in (#.#/#) refer to 
+# the corresponding part of the datasheet (Section/Page number)
+
 BOOT     = 0x80
 Z_EN     = 0x04
 Y_EN     = 0x02

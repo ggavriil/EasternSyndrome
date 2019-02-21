@@ -4,6 +4,10 @@ import datetime
 import time
 
 
+# Aggregates multiple data points together. This reduces network overhead.
+# We eventually send the slouch angles, the total "activity" metric and
+# the battery voltage.
+
 class samplingData:
     def __init__(self, meanAngleZ, stdAcc, adcV, timestamp):
         self.meanAngleZ = meanAngleZ

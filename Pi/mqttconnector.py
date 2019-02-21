@@ -1,5 +1,6 @@
 import paho.mqtt.client as mqtt
 
+# Manages the MQTT communication.
 # We should not be able to create more than 1 MQTT clients
 # Otherwise we might waste resources. Therefore, this is not a class.
 
