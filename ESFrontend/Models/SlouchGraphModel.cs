@@ -27,7 +27,7 @@ namespace ESFrontend.Models
         {
             DateTime to = DateTime.Now;
             DateTime from = to.Subtract(new TimeSpan(numberOfDays, 0, 0, 0));
-            from = to.Subtract(new TimeSpan(2, 0, 0));  
+            from = to.Subtract(new TimeSpan(0, 10, 0));  
             var dataPoints = GetData(from, to);
             Points = dataPoints.Select(p => Tuple.Create(p.Timestamp, p.Angle)).ToList();
         }

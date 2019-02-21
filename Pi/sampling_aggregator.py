@@ -5,14 +5,11 @@ import time
 
 
 class samplingData:
-    
     def __init__(self, meanAngleZ, stdAcc, adcV, timestamp):
         self.meanAngleZ = meanAngleZ
         self.stdAcc = stdAcc
         self.timestamp = timestamp
         self.adcV = adcV
-
-
    
 class sampleData:
     def __init__(self, timestamp, meanAngleZ, stdAcc):
@@ -29,7 +26,6 @@ class aggregatedSamplingData:
 
 
 class samplingAggregator:
-
     def __init__(self, size):
         self.samples = []
         self.size = size
