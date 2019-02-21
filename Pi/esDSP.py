@@ -12,6 +12,9 @@ from functools import reduce
 import statistics
 from sampler import Sampler
 
+def vibrate_on_notification(client, userdata, message):
+    if message.topic == "VirtualTopic.ESNOTIF":
+        vc.vibrate(0.2, 3, -1)
 
 print("Please stand upright and wait for calibration to finish")
 time.sleep(3)
@@ -24,6 +27,7 @@ last_slouch_time = datetime.datetime.now()
 slouching = False
 
 samplingAggregator = sd.samplingAggregator(5)
+mqtt.subscribe_notif(vibrate_on_notification)
 
 while True:   
     features, batt_v = sampler.getSamples()
@@ -52,7 +56,6 @@ while True:
         last_slouch_time = curr_time
 
     samplingAggregator.register(sd.samplingData(current_angle_z, features.std.resultant, batt_v, curr_time))
-
 
 
 
