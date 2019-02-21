@@ -4,6 +4,7 @@ import paho.mqtt.client as mqtt
 # Otherwise we might waste resources. Therefore, this is not a class.
 
 mqcl = mqtt.Client()
+#mqcl.tls_set(ca_certs="client.crt" ,certfile="client.csr" ,keyfile="client.key")
 mqcl.connect("es.giorgos.io", port=1883)
 mqcl.loop_start()
 
