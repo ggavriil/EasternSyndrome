@@ -6,7 +6,6 @@ import digitalio
 import busio
 import ES_LIS3DH
 import RPi.GPIO as GPIO
-import samplingdata as sd
 import mqttconnector as mqtt
 import vibrcontrol as vc
 from functools import reduce
